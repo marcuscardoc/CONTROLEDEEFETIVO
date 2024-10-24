@@ -26,7 +26,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.util.converter.DoubleStringConverter;
 import javafx.util.converter.IntegerStringConverter;
 
-public class telaprincipalcontroller {
+public class ControleDeEfetivoController {
 	
  //TELA INICIAL(TELA DE APRESENTAÇAO)
 	    //PANE
@@ -492,10 +492,7 @@ public class telaprincipalcontroller {
             	 
             	 if (newValue == null || newValue.trim().isEmpty()) {
             	        mostrarAlerta("ERRO!!", "NOME EM BRANCO", Alert.AlertType.ERROR);
-            	        event.consume(); 
-            	    } else if (newValue.matches(".*\\d.*")) {
-            	        mostrarAlerta("ERRO!!", "NOME NÃO PODE CONTER NÚMEROS", Alert.AlertType.ERROR);
-            	        event.consume(); 
+            	        event.consume();  
             	    } else {
             	        Soldado sd = event.getRowValue();
             	        sd.setNome(newValue);
@@ -550,9 +547,14 @@ public class telaprincipalcontroller {
            	 if (newValue == null || newValue.trim().isEmpty()) {
      	        mostrarAlerta("ERRO!!", "CPF EM BRANCO", Alert.AlertType.ERROR);
      	        event.consume(); 
-           	 } else if(newValue == "A"){
-           		//ADICIONAR O ERRO DE EXCESSO/MINIMO DE NUMEROS PERMITIDOS E ADICIONAR MASCARA(NNN.NNN.NNN-NN)
-           		
+           	 //} //else if (newValue.length() != 14) {
+               // mostrarAlerta("ERRO", "O CAMPO DEVE TER EXATAMENTE 14 CARACTERES", Alert.AlertType.ERROR);
+               //  event.consume();
+             
+             // Verifica se está no formato correto usando regex
+             } else if (!newValue.matches("\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}")) {
+                 mostrarAlerta("ERRO", "FORMATO INVÁLIDO. O FORMATO CORRETO É NNN.NNN.NNN-NN", Alert.AlertType.ERROR);
+                 event.consume();
      	     } else {
      	        Soldado sd = event.getRowValue();
      	        sd.setCpf(newValue);
@@ -630,7 +632,10 @@ public class telaprincipalcontroller {
      		     soldadoDAO.salvarModificacoes(sd);            	         	 
              });
              
-             tcmesFerias.setCellValueFactory(cellData -> new SimpleStringProperty( cellData.getValue().getMesFerias()));
+             tcmesFerias.setCellValueFactory(cellData -> {
+            	    String mesFerias = cellData.getValue().getMesFerias();
+            	    return new SimpleStringProperty(mesFerias == null || mesFerias.trim().isEmpty() ? "INSERIR MES" : mesFerias);
+             });
              tcmesFerias.setCellFactory(TextFieldTableCell.forTableColumn());
              tcmesFerias.setOnEditCommit( event -> {
             	 String newValue = event.getNewValue();
@@ -679,7 +684,9 @@ public class telaprincipalcontroller {
             	    }
              });  
              
-             tcApInicioFerias.setCellValueFactory(cellData -> new SimpleStringProperty( cellData.getValue().getApInicio()));
+             tcApInicioFerias.setCellValueFactory(cellData -> {
+                 String apInicio = cellData.getValue().getApInicio();
+                 return new SimpleStringProperty(apInicio == null || apInicio.trim().isEmpty() ? "NAO" : apInicio);});
              tcApInicioFerias.setCellFactory(TextFieldTableCell.forTableColumn());
              tcApInicioFerias.setOnEditCommit(event -> {            	             	 
             	 String newValue = event.getNewValue();
@@ -698,7 +705,9 @@ public class telaprincipalcontroller {
             	 
              }); 
              
-             tcApTerminoFerias.setCellValueFactory(cellData -> new SimpleStringProperty( cellData.getValue().getApTermino()));
+             tcApTerminoFerias.setCellValueFactory(cellData -> {
+                 String apTermino = cellData.getValue().getApInicio();
+                 return new SimpleStringProperty(apTermino == null || apTermino.trim().isEmpty() ? "NAO" : apTermino);});
              tcApTerminoFerias.setCellFactory(TextFieldTableCell.forTableColumn());
              tcApTerminoFerias.setOnEditCommit(event -> {
             	 String newValue = event.getNewValue();
@@ -724,8 +733,40 @@ public class telaprincipalcontroller {
              tInspecaoSaude.setEditable(true);
              
              tcNomeSaude.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getNome()));
+             tcNomeSaude.setCellFactory(TextFieldTableCell.forTableColumn());
+     	     tcNomeSaude.setOnEditCommit(event -> {
+                 String newValue = event.getNewValue();
+             	 
+            	 if (newValue == null || newValue.trim().isEmpty()) {
+            	        mostrarAlerta("ERRO", "NOME EM BRANCO", Alert.AlertType.ERROR);
+            	        event.consume(); 
+            	    } else {
+            	        SoldadoInpSaude sd = event.getRowValue();
+            	        sd.setNome(newValue);
+            	        soldadoInpSaudeDAO.salvarModificacoes(sd);           	        
+            	    }
+            	 
+             }); 
+             
              tcSaramSaude.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getSaram()).asObject());
+             tcSaramSaude.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
+         	 tcSaramSaude.setOnEditCommit( event -> { 
+         		 int newValue = event.getNewValue();
+                 SoldadoInpSaude sd = event.getRowValue();        		        
+         		 sd.setSaram(newValue);        		        
+         		 soldadoInpSaudeDAO.salvarModificacoes(sd);
+              });
+         	        	
+             
              tcTurmaSaude.setCellValueFactory(cellData -> new SimpleDoubleProperty(cellData.getValue().getTurma()).asObject());
+             tcTurmaSaude.setCellFactory(TextFieldTableCell.forTableColumn(new DoubleStringConverter()));
+          	 tcTurmaSaude.setOnEditCommit( event -> {
+          		 Double newValue = event.getNewValue();
+                 SoldadoInpSaude sd = event.getRowValue();     		       
+       		     sd.setTurma(newValue);     		        
+       		     soldadoInpSaudeDAO.salvarModificacoes(sd);
+                 });
+             
              
              tcDataEntregaSaude.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getDataEntrega()));
              tcDataEntregaSaude.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -743,7 +784,10 @@ public class telaprincipalcontroller {
             	 
              }); 
              
-             tcExameSaude.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getExame()));
+             tcExameSaude.setCellValueFactory(cellData -> {
+                 String exame = cellData.getValue().getExame();
+                 return new SimpleStringProperty(exame == null || exame.trim().isEmpty() ? "INSERIR EXAME" : exame);
+                 });
              tcExameSaude.setCellFactory(TextFieldTableCell.forTableColumn());
      	     tcExameSaude.setOnEditCommit(event -> {
           	 String newValue = event.getNewValue();
@@ -758,7 +802,10 @@ public class telaprincipalcontroller {
             	    }
              }); 
              
-             tcGabSolicitada.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getGabSolicitada()));
+             tcGabSolicitada.setCellValueFactory(cellData -> {
+             String gabSolicitada = cellData.getValue().getGabSolicitada();
+             return new SimpleStringProperty(gabSolicitada == null || gabSolicitada.trim().isEmpty() ? "NAO" : gabSolicitada);
+             });
              tcGabSolicitada.setCellFactory(TextFieldTableCell.forTableColumn());
      	     tcGabSolicitada.setOnEditCommit(event -> {
              String newValue = event.getNewValue();
@@ -776,7 +823,10 @@ public class telaprincipalcontroller {
             	    }
              });         
              
-             tcPegouGab.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getPegouGab()));
+             tcPegouGab.setCellValueFactory(cellData -> {
+                 String pegouGab = cellData.getValue().getPegouGab();
+                 return new SimpleStringProperty(pegouGab == null || pegouGab.trim().isEmpty() ? "NAO" : pegouGab);
+                 });
              tcPegouGab.setCellFactory(TextFieldTableCell.forTableColumn());
      	     tcPegouGab.setOnEditCommit(event -> {
             	 String newValue = event.getNewValue();
@@ -920,7 +970,11 @@ public class telaprincipalcontroller {
         	  
          }); 
      	
-     	tcRealizado1Etapa.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getRealizado1Etapa()));
+     	tcRealizado1Etapa.setCellValueFactory(cellData ->  {
+     	    // Verifica se o valor é nulo ou vazio e retorna "Não" como padrão
+     	    String realizado1etapa = cellData.getValue().getRealizado1Etapa();
+     	    return new SimpleStringProperty(realizado1etapa == null || realizado1etapa.trim().isEmpty() ? "NAO" : realizado1etapa);
+     	});
      	tcRealizado1Etapa.setCellFactory(TextFieldTableCell.forTableColumn());
      	tcRealizado1Etapa.setOnEditCommit( event -> {
         	  String newValue = event.getNewValue();
@@ -953,7 +1007,9 @@ public class telaprincipalcontroller {
               }
          });   
      	
-     	tcRealizado2Etapa.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getRealizado2Etapa()));
+     	tcRealizado2Etapa.setCellValueFactory(cellData ->  {
+     	    String realizado2etapa = cellData.getValue().getRealizado2Etapa();
+     	    return new SimpleStringProperty(realizado2etapa == null || realizado2etapa.trim().isEmpty() ? "NAO" : realizado2etapa);});
      	tcRealizado2Etapa.setCellFactory(TextFieldTableCell.forTableColumn());
      	tcRealizado2Etapa.setOnEditCommit( event -> {  
             String newValue = event.getNewValue();
@@ -972,7 +1028,7 @@ public class telaprincipalcontroller {
          });  
      	
      	carregarDadosSoldados();
-     	TVTacf.setItems(soldadosData);   
+     	TVTacf.setItems(soldadosData);
      	
         } 
         
@@ -1009,6 +1065,14 @@ public class telaprincipalcontroller {
         @FXML
         private void addSoldadoDispMedica() {
         	try {
+        		
+        	if (TFNomeDispMedica.getText().isEmpty() || TFQuantidadeDispMedica.getText().isEmpty() ||
+        	    TFApartirDeDispMedica.getText().isEmpty() || TFTipoDeDispensa.getText().isEmpty() ||
+        	    TFCidDispMedica.getText().isEmpty() || TFMedicoDispMedica.getText().isEmpty()) {
+        	            
+        	    mostrarAlerta("Erro de Validação", "Por favor, preencha todos os campos.", Alert.AlertType.ERROR);
+        	    return;
+        	        }
          	String nome = TFNomeDispMedica.getText();
         	String quantidadee = TFQuantidadeDispMedica.getText();
         	String apartirDe = TFApartirDeDispMedica.getText();
@@ -1016,7 +1080,14 @@ public class telaprincipalcontroller {
         	String cid = TFCidDispMedica.getText();
         	String nomeMedico = TFMedicoDispMedica.getText();
         	
-        	int quantidade = Integer.parseInt(quantidadee);
+        	int quantidade;
+             
+        	try {
+               quantidade = Integer.parseInt(quantidadee);
+             } catch (NumberFormatException e) {
+                 mostrarAlerta("Erro de Validação", "O campo 'Quantidade' deve ser um número válido.", Alert.AlertType.ERROR);
+                 return;
+             }
         	
         	SoldadoDispMedica soldadoDispMedica = new SoldadoDispMedica();
         	soldadoDispMedica.setNome(nome);
@@ -1031,6 +1102,13 @@ public class telaprincipalcontroller {
         	soldadosDataDispMedica.add(soldadoDispMedica);
         	TWDispMedica.setItems(soldadosDataDispMedica);
         	
+        	TFNomeDispMedica.clear();
+        	TFQuantidadeDispMedica.clear();
+        	TFApartirDeDispMedica.clear();
+        	TFTipoDeDispensa.clear();
+        	TFCidDispMedica.clear();
+        	TFMedicoDispMedica.clear();
+        	
         	} catch(Exception e) {
         		mostrarAlerta("Erro", "Erro inesperado", Alert.AlertType.ERROR);
         		e.printStackTrace();
@@ -1040,12 +1118,32 @@ public class telaprincipalcontroller {
         @FXML
         private void addSoldadoSaude() {
         	try {
+        		
+        		if(tfNomeSaude.getText().isEmpty() || tfTurmaSaude.getText().isEmpty() || tfSaramSaude.getText().isEmpty()){
+        			mostrarAlerta("Erro de Validação", "Por favor, preencha todos os campos.", Alert.AlertType.ERROR);
+            	    return;
+        		}
+        		
         	String nome = tfNomeSaude.getText();
         	String turmaa =  tfTurmaSaude.getText();
         	String saramm = tfSaramSaude.getText();
         	
-        	int saram = Integer.parseInt(saramm);
-            Double turma = Double.parseDouble(turmaa);
+        	int saram; 
+            Double turma;
+            
+            try {
+                saram = Integer.parseInt(saramm);
+              } catch (NumberFormatException e) {
+                  mostrarAlerta("Erro de Validação", "O campo 'Saram' deve ser um número válido.", Alert.AlertType.ERROR);
+                  return;
+              }
+            
+            try {
+                turma = Double.parseDouble(turmaa);
+              } catch (NumberFormatException e) {
+                  mostrarAlerta("Erro de Validação", "O campo 'Turma' deve ser um número válido.", Alert.AlertType.ERROR);
+                  return;
+              }
         	
         	SoldadoInpSaude soldadoInpSaude = new SoldadoInpSaude();
             soldadoInpSaude.setNome(nome);
@@ -1060,6 +1158,7 @@ public class telaprincipalcontroller {
             tfNomeSaude.clear();
             tfTurmaSaude.clear();
             tfSaramSaude.clear();
+        	
         	} catch(Exception e) {
         		mostrarAlerta("Erro", "Erro inesperado", Alert.AlertType.ERROR);
         		e.printStackTrace();
@@ -1068,16 +1167,45 @@ public class telaprincipalcontroller {
         
         @FXML
         private void addsoldado() {
-        	try {
         	String nome =  tfNomeTelaEfetivo.getText();
         	String saramm = tfSaramTelaEfetivo.getText();
         	String turmaa = tfTurmaTelaEfetivo.getText();
             String postoDeSv = tfPostoDeSvTelaEfetivo.getText();
             String cpf = tfCpfTelaEfetivo.getText();
             String senhaPortal = tfSenhaPortalTelaEfetivo.getText();
+        	
+        	try {
+        		
+        		if(tfNomeTelaEfetivo.getText().isEmpty() || tfSaramTelaEfetivo.getText().isEmpty() ||
+        		   tfTurmaTelaEfetivo.getText().isEmpty() ||tfPostoDeSvTelaEfetivo.getText().isEmpty() || 
+        		   tfCpfTelaEfetivo.getText().isEmpty() || tfSenhaPortalTelaEfetivo.getText().isEmpty()) 
+                {
+        			mostrarAlerta("Erro de Validação", "Por favor, preencha todos os campos.", Alert.AlertType.ERROR);
+            	    return;
+        		//}  else if (cpf.length() != 14) {
+                  //  mostrarAlerta("ERRO", "O CAMPO CPF DEVE TER EXATAMENTE 14 CARACTERES", Alert.AlertType.ERROR);
+                  //  return;
+                } else if (!cpf.matches("\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}")) {
+                    mostrarAlerta("ERRO", "FORMATO DE CPF INVÁLIDO. O FORMATO CORRETO É NNN.NNN.NNN-NN", Alert.AlertType.ERROR);
+                    return;
+        	    }
 
-            int saram = Integer.parseInt(saramm);
-            Double turma = Double.parseDouble(turmaa);         
+            int saram; 
+            Double turma;
+            
+            try {
+                saram = Integer.parseInt(saramm);
+              } catch (NumberFormatException e) {
+                  mostrarAlerta("Erro de Validação", "O campo 'Saram' deve ser um número válido.", Alert.AlertType.ERROR);
+                  return;
+              }
+            
+            try {
+                turma = Double.parseDouble(turmaa);  
+              } catch (NumberFormatException e) {
+                  mostrarAlerta("Erro de Validação", "O campo 'Turma' deve ser um número válido.", Alert.AlertType.ERROR);
+                  return;
+              }
             
             Soldado soldado = new Soldado();
             soldado.setNome(nome);
@@ -1301,11 +1429,11 @@ public class telaprincipalcontroller {
              if (!nomePesquisa.isEmpty()) {
                ObservableList<Soldado> soldadosControleMensalFilteredData = FXCollections.observableArrayList(resultados);
                tControleMensal.setItems(soldadosControleMensalFilteredData);
-               mostrarAlerta("Erro", "Nome em branco", Alert.AlertType.ERROR);
+               //mostrarAlerta("Erro", "Nome em branco", Alert.AlertType.ERROR);
            } else if(resultados.isEmpty()){
                ObservableList<Soldado> soldadosControleMensalFilteredData = FXCollections.observableArrayList(resultados);
                tControleMensal.setItems(soldadosControleMensalFilteredData);
-               mostrarAlerta("Erro", "Nome não encontrado", Alert.AlertType.ERROR);
+               //mostrarAlerta("Erro", "Nome não encontrado", Alert.AlertType.ERROR);
            } else {
         	   ObservableList<Soldado> soldadosControleMensalFilteredData = FXCollections.observableArrayList(resultados);
                tControleMensal.setItems(soldadosControleMensalFilteredData);
@@ -1321,17 +1449,16 @@ public class telaprincipalcontroller {
            List<Soldado> resultados = soldadoDAO.buscarPorNome(nomePesquisa);
 
            try {
-               // Verifica se o campo de pesquisa está vazio
                if (nomePesquisa.isEmpty()) {
             	   ObservableList<Soldado> soldadosEfetivoFilteredData = FXCollections.observableArrayList(resultados);
                    tTelaEfetivo.setItems(soldadosEfetivoFilteredData);
-                   mostrarAlerta("Erro", "Nome em branco", Alert.AlertType.ERROR);
+                   //mostrarAlerta("Erro", "Nome em branco", Alert.AlertType.ERROR);
                } 
                // Verifica se a pesquisa não retornou resultados
                else if (resultados.isEmpty()) {
             	   ObservableList<Soldado> soldadosEfetivoFilteredData = FXCollections.observableArrayList(resultados);
                    tTelaEfetivo.setItems(soldadosEfetivoFilteredData);
-                   mostrarAlerta("Erro", "Nome não encontrado", Alert.AlertType.ERROR);
+                   //mostrarAlerta("Erro", "Nome não encontrado", Alert.AlertType.ERROR);
                } 
                // Se há resultados, atualiza a tabela com eles
                else {
@@ -1353,11 +1480,11 @@ public class telaprincipalcontroller {
              if (!nomePesquisa.isEmpty()) {
                ObservableList<Soldado> soldadosFeriasFilteredData = FXCollections.observableArrayList(resultados);
                tTelaFerias.setItems(soldadosFeriasFilteredData);
-               mostrarAlerta("Erro", "Nome em branco", Alert.AlertType.ERROR);
+               //mostrarAlerta("Erro", "Nome em branco", Alert.AlertType.ERROR);
            } else if(resultados.isEmpty()){
         	   ObservableList<Soldado> soldadosFeriasFilteredData = FXCollections.observableArrayList(resultados);
                tTelaFerias.setItems(soldadosFeriasFilteredData);
-        	   mostrarAlerta("Erro", "Nome nao existe", Alert.AlertType.ERROR);
+        	   //mostrarAlerta("Erro", "Nome nao existe", Alert.AlertType.ERROR);
            } else{
         	   ObservableList<Soldado> soldadosFeriasFilteredData = FXCollections.observableArrayList(resultados);
                tTelaFerias.setItems(soldadosFeriasFilteredData);
@@ -1376,11 +1503,11 @@ public class telaprincipalcontroller {
              if (!nomePesquisa.isEmpty()) {              
                ObservableList<Soldado> soldadosTACFFilteredData = FXCollections.observableArrayList(resultados);
                TVTacf.setItems(soldadosTACFFilteredData);
-               mostrarAlerta("Erro", "Nome em branco", Alert.AlertType.ERROR);
+               //mostrarAlerta("Erro", "Nome em branco", Alert.AlertType.ERROR);
            } else if(resultados.isEmpty()){
         	   ObservableList<Soldado> soldadosTACFFilteredData = FXCollections.observableArrayList(resultados);
                TVTacf.setItems(soldadosTACFFilteredData);
-        	   mostrarAlerta("Erro", "Nome nao existe", Alert.AlertType.ERROR);
+        	   //mostrarAlerta("Erro", "Nome nao existe", Alert.AlertType.ERROR);
            } else{
         	   ObservableList<Soldado> soldadosTACFFilteredData = FXCollections.observableArrayList(resultados);
                TVTacf.setItems(soldadosTACFFilteredData);
@@ -1401,11 +1528,11 @@ public class telaprincipalcontroller {
              if (!nomePesquisa.isEmpty()) {        	   
                ObservableList<SoldadoInpSaude> soldadosInpSaudeFilteredData = FXCollections.observableArrayList(resultados);
                tInspecaoSaude.setItems(soldadosInpSaudeFilteredData);    
-               mostrarAlerta("Erro", "Nome em branco", Alert.AlertType.ERROR);
+               //mostrarAlerta("Erro", "Nome em branco", Alert.AlertType.ERROR);
            } else if(resultados.isEmpty()) {
         	   ObservableList<SoldadoInpSaude> soldadosInpSaudeFilteredData = FXCollections.observableArrayList(resultados);
                tInspecaoSaude.setItems(soldadosInpSaudeFilteredData);  
-        	   mostrarAlerta("Erro", "Nome nao existe", Alert.AlertType.ERROR);
+        	   //mostrarAlerta("Erro", "Nome nao existe", Alert.AlertType.ERROR);
            } else {
         	   ObservableList<SoldadoInpSaude> soldadosInpSaudeFilteredData = FXCollections.observableArrayList(resultados);
                tInspecaoSaude.setItems(soldadosInpSaudeFilteredData); 
@@ -1425,10 +1552,10 @@ public class telaprincipalcontroller {
              if (!nomePesquisa.isEmpty()) {
                ObservableList<SoldadoDispMedica> soldadosDispMedicaFilteredData = FXCollections.observableArrayList(resultados);
                TWDispMedica.setItems(soldadosDispMedicaFilteredData);   
-               mostrarAlerta("Erro", "Nome em branco", Alert.AlertType.ERROR);
+               //mostrarAlerta("Erro", "Nome em branco", Alert.AlertType.ERROR);
            } else if(resultados.isEmpty()) {
         	   carregarDadosSoldados(); 
-        	   mostrarAlerta("Erro", "Nome nao existe", Alert.AlertType.ERROR);
+        	   //mostrarAlerta("Erro", "Nome nao existe", Alert.AlertType.ERROR);
            } else{
         	   ObservableList<SoldadoDispMedica> soldadosDispMedicaFilteredData = FXCollections.observableArrayList(resultados);
                TWDispMedica.setItems(soldadosDispMedicaFilteredData);   

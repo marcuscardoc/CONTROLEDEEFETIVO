@@ -1,7 +1,5 @@
 package main.java.controller;
 
-import java.io.IOException;
-
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -12,8 +10,8 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-public class pjtcontroller {
-	 @FXML
+public class LoginController {
+	    @FXML
 	    private TextField usuario;
 
 	    @FXML
@@ -31,7 +29,8 @@ public class pjtcontroller {
         }	
 
 	    @FXML
-	    private void handleLogin() throws IOException {
+	    private void Login(){
+	    	
 	    	try {
 	        String usuarioo = usuario.getText();
 	        String senhaa = senha.getText();
@@ -40,18 +39,14 @@ public class pjtcontroller {
 	        	Stage stage = (Stage) entrarButton.getScene().getWindow();
 	        	Parent root = FXMLLoader.load(getClass().getResource("/main/java/view/telaprincipal.fxml"));
 	        	stage.setScene(new Scene(root));
-	        	//stage.setFullScreen(true);
 	        	stage.show();
 	        } else {
 	           mostrarAlerta("Erro", "Usuario ou senha incorreto", Alert.AlertType.ERROR);
 	        }
 	    	}catch(Exception e) {
 	    		e.printStackTrace();
-	    		mostrarAlerta("Erro", "Erro inesperado", Alert.AlertType.ERROR);
-	    		
-	    	}
-	        
-	        
+	    		mostrarAlerta("Erro", "Erro inesperado", Alert.AlertType.ERROR);	    		
+	    	}	        	        
 	    }
 	}
 
