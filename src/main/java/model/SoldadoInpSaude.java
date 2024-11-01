@@ -1,4 +1,4 @@
-package main.java.controller;
+package main.java.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,11 +12,8 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-
 @Entity
-public class SoldadoInpSaude {
-
-	
+public class SoldadoInpSaude {	
 	private Integer id;
 	private StringProperty nome = new SimpleStringProperty();
 	private DoubleProperty turma = new SimpleDoubleProperty();
@@ -26,12 +23,12 @@ public class SoldadoInpSaude {
 	private StringProperty exame = new SimpleStringProperty();
 	private StringProperty dataEntrega = new SimpleStringProperty(); 
 
-	public SoldadoInpSaude() {
-
-	}
- @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	public SoldadoInpSaude() {}
+	
+@Id
+@Column(name = "id")
+@GeneratedValue(strategy = GenerationType.IDENTITY)
+    //ID
 	public Integer getId() {
 		return id;
 	}
@@ -40,8 +37,8 @@ public class SoldadoInpSaude {
 		this.id = id;
 	}
 
-	@Column(name = "NOME")
-
+@Column(name = "NOME")
+    //NOME
 	public String getNome() {
 		return nome.get();
 	}
@@ -53,8 +50,8 @@ public class SoldadoInpSaude {
 	public StringProperty nomeProperty() {
 		return nome;
 	}
-	@Column(name = "TURMA")
-
+@Column(name = "TURMA")
+    //TURMA
 	public Double getTurma() {
 		return turma.get();
 	}
@@ -66,8 +63,8 @@ public class SoldadoInpSaude {
 	public DoubleProperty turmaProperty() {
 		return turma;
 	}
-	@Column(name = "SARAM")
-
+@Column(name = "SARAM")
+    //SARAM
 	public Integer getSaram() {
 		return saram.get();
 	}
@@ -79,8 +76,8 @@ public class SoldadoInpSaude {
 	public IntegerProperty saramProperty() {
 		return saram;
 	}
-	@Column(name = "GAB_SOLICITADA")
-
+@Column(name = "GAB_SOLICITADA")
+    //GAB SOLICITADA
 	public String getGabSolicitada() {
 		return gabSolicitada.get();
 	}
@@ -92,8 +89,8 @@ public class SoldadoInpSaude {
 	public StringProperty gabSolicitadaProperty() {
 		return gabSolicitada;
 	}
-	@Column(name = "PEGOU_GAB")
-
+@Column(name = "PEGOU_GAB")
+    //PEGOU GAB
 	public String getPegouGab() {
 		return pegouGab.get();
 	}
@@ -104,9 +101,9 @@ public class SoldadoInpSaude {
 	
 	public StringProperty pegouGabProperty() {
 		return pegouGab;
-	}
-	@Column(name = "EXAME")
-
+	}	
+@Column(name = "EXAME")
+    //EXAME
 	public String getExame() {
 		return exame.get();
 	}
@@ -118,8 +115,8 @@ public class SoldadoInpSaude {
 	public StringProperty exameProperty() {
 		return exame;
 	}
-	@Column(name = "DATA_ENTREGA")
-
+@Column(name = "DATA_ENTREGA")
+    //DATA ENTREGA
 	public String getDataEntrega() {
 		return dataEntrega.get();
 	}

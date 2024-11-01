@@ -1,7 +1,6 @@
-package main.java.controller;
+package main.java.model;
 
 import java.time.LocalDate;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -23,31 +22,38 @@ public class Observacao {
     private String observacao;
     
     
-    
- public Soldado getSoldado() {
+    //SOLDADO
+    public Soldado getSoldado() {
 		return soldado;
 	}
+    
 	public void setSoldado(Soldado soldado) {
 		this.soldado = soldado;
 	}
-	// Getters e Setters
+	
+	//ID
 	public Integer getId() {
 		return idObs;
 	}
+	
 	public void setId(Integer id) {
 		this.idObs = id;
 	}
 	
+	//DATA
 	public LocalDate getData() {
 		return data;
 	}
+	
 	public void setData(LocalDate data) {
 		this.data = data;
 	}
 	
+	//TEXT OBS
 	public String getTextObs() {
 		return observacao;
 	}
+	
 	public void setTextObs(String textObs) {
 		this.observacao = textObs;
 	}

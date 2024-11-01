@@ -25,6 +25,15 @@ import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.converter.DoubleStringConverter;
 import javafx.util.converter.IntegerStringConverter;
+import main.java.DAO.SoldadoDAO;
+import main.java.DAO.SoldadoDispMedicaDAO;
+import main.java.DAO.SoldadoInpSaudeDAO;
+import main.java.DAO.SoldadoTACFDAO;
+import main.java.model.Observacao;
+import main.java.model.Soldado;
+import main.java.model.SoldadoDispMedica;
+import main.java.model.SoldadoInpSaude;
+import main.java.model.SoldadoTACF;
 
 public class ControleDeEfetivoController {
 	
@@ -1322,24 +1331,24 @@ public class ControleDeEfetivoController {
         
         
         //CARREGA AS OBSERVAÇOES
-       private void carregarObservacoes(LocalDate dataSelecionada) {
-    	   try {
-	        for (Soldado soldado : soldadosData) {
+       //private void carregarObservacoes(LocalDate dataSelecionada) {
+        //   try {
+        //    for (Soldado soldado : soldadosData) {
     	
-            Observacao observacao = buscarObservacaoPorSoldadoEData(soldado, dataSelecionada);
+        //    Observacao observacao = buscarObservacaoPorSoldadoEData(soldado, dataSelecionada);
         
-            if (observacao != null) {
-            soldado.setObservacaoTemp(observacao.getTextObs()); 
-            }          
-       }
+        //   if (observacao != null) {
+        //    soldado.setObservacaoTemp(observacao.getTextObs()); 
+        //    }          
+        //}
     
-            tControleMensal.setItems(soldadosData); 
+        //    tControleMensal.setItems(soldadosData); 
             
-    	   } catch(Exception e) {
-    		   mostrarAlerta("Erro", "Falha ao excluir o soldado", Alert.AlertType.ERROR);
-               e.printStackTrace();
-    	   }
-       }
+        //   } catch(Exception e) {
+        //	   mostrarAlerta("Erro", "Falha ao excluir o soldado", Alert.AlertType.ERROR);
+        //      e.printStackTrace();
+        //   }
+        // }
  
  
  

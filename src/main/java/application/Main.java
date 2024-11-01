@@ -11,7 +11,7 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) throws IOException {		
 	
-	Pane root = FXMLLoader.load(getClass().getResource("/main/java/view/pjt.fxml"));
+	Pane root = FXMLLoader.load(getClass().getResource("/main/java/view/Login.fxml"));
 	
 	Scene scene = new Scene(root);
 	primaryStage.setScene(scene);

@@ -1,4 +1,4 @@
-package main.java.controller;
+package main.java.DAO;
 
 import java.util.List;
 
@@ -7,6 +7,8 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
+
+import main.java.model.Soldado;
 
 public class SoldadoDAO {
 	EntityManagerFactory emf = Persistence.createEntityManagerFactory("esicontrol");
@@ -24,15 +26,15 @@ public class SoldadoDAO {
 	    EntityTransaction transaction = null;
 	    try {
 	        transaction = em.getTransaction();
-	        transaction.begin();
+	       transaction.begin();
 
 	       
 	        em.merge(soldado);
 
-	        transaction.commit();
+	       transaction.commit();
 	    } catch (Exception e) {
 	        if (transaction != null && transaction.isActive()) {
-	            transaction.rollback();
+	           transaction.rollback();
 	        }
 	        e.printStackTrace();
 	        
@@ -50,30 +52,30 @@ public class SoldadoDAO {
 	        
 	        Soldado soldadoToDelete = em.find(Soldado.class, soldado.getId());
 	        if (soldadoToDelete != null) {
-	            em.remove(soldadoToDelete);
+	           em.remove(soldadoToDelete);
 	        }
 
 	        transaction.commit();
 	    } catch (Exception e) {
 	        if (transaction != null && transaction.isActive()) {
-	            transaction.rollback();
+	          transaction.rollback();
 	        }
 	        e.printStackTrace();
 	    }
 	}
 
 	public List<Soldado> buscarPorNome(String nome) {
-        EntityManager em = emf.createEntityManager();
+	   EntityManager em = emf.createEntityManager();
 
-        try {
-            // Consultar o banco de dados para buscar soldados pelo nome
-            TypedQuery<Soldado> query = em.createQuery("SELECT s FROM Soldado s WHERE s.nome LIKE :nome", Soldado.class);
-            query.setParameter("nome", "%" + nome + "%");
-            return query.getResultList();
-        } finally {
-            em.close();
-        }
-    }
+	    try {
+	        // Consultar o banco de dados para buscar soldados pelo nome
+	        TypedQuery<Soldado> query = em.createQuery("SELECT s FROM Soldado s WHERE s.nome LIKE :nome", Soldado.class);
+	        query.setParameter("nome", "%" + nome + "%");
+	        return query.getResultList();
+	    } finally {
+	        em.close();
+	   }
+	}
 	
 	public List<Soldado> buscarSoldados(){
 		EntityManager em = emf.createEntityManager();

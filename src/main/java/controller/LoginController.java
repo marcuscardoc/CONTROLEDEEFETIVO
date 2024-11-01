@@ -37,7 +37,7 @@ public class LoginController {
 
 	        if (usuarioo.equals("admin") && senhaa.equals("admin")) {
 	        	Stage stage = (Stage) entrarButton.getScene().getWindow();
-	        	Parent root = FXMLLoader.load(getClass().getResource("/main/java/view/telaprincipal.fxml"));
+	        	Parent root = FXMLLoader.load(getClass().getResource("/main/java/view/ControleGSD.fxml"));
 	        	stage.setScene(new Scene(root));
 	        	stage.show();
 	        } else {

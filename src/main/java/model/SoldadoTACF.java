@@ -1,4 +1,4 @@
-package main.java.controller;
+package main.java.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,18 +17,13 @@ public class SoldadoTACF {
 	private StringProperty data2etapa = new SimpleStringProperty();
 	private StringProperty realizado1etapa = new SimpleStringProperty();
 	private StringProperty realizado2etapa = new SimpleStringProperty();
-	 
-	
-	
-	SoldadoTACF(){
-		
-	}
-	
+	 	
+	SoldadoTACF(){}
 
 @Id
 @Column(name = "id")
 @GeneratedValue(strategy = GenerationType.IDENTITY)
-//ID
+    //ID
 	public Integer getId() {
 		return id;
 	}
@@ -39,12 +34,13 @@ public class SoldadoTACF {
 
 @ManyToOne
 @JoinColumn(name = "soldado_id", nullable = false)
+   //SOLDADO
    private Soldado soldado;
 
 @Column(name = "DATA1ETAPA")
-// DATA 1 ETAPA
-public String getData1Etapa() {
-	return data1etapa.get();
+   // DATA 1 ETAPA
+   public String getData1Etapa() {
+	     return data1etapa.get();
 }
 
 public void setData1Etapa(String data1etapa) {

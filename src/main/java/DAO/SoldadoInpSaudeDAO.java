@@ -1,4 +1,4 @@
-package main.java.controller;
+package main.java.DAO;
 
 import java.util.List;
 
@@ -8,19 +8,21 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 
-public class SoldadoDispMedicaDAO {
- 
+import main.java.model.Soldado;
+import main.java.model.SoldadoInpSaude;
+
+public class SoldadoInpSaudeDAO {
 EntityManagerFactory emf = Persistence.createEntityManagerFactory("esicontrol");
 	
-	public void criarSoldadoDispMedica(SoldadoDispMedica soldadoDispMedica) {
+public void atualizarSoldado(SoldadoInpSaude soldadoInpSaude) {
 		EntityManager em = emf.createEntityManager();
 		em.getTransaction().begin();
-		em.persist(soldadoDispMedica);
+		em.persist(soldadoInpSaude);
 		em.getTransaction().commit();
 		em.close();
 	}
 	
-	public void salvarModificacoes(SoldadoDispMedica soldadoDispMedica) {
+public void salvarModificacoes(SoldadoInpSaude soldadoInpSaude) {
 		EntityManager em = emf.createEntityManager();
 	    EntityTransaction transaction = null;
 	    try {
@@ -28,7 +30,7 @@ EntityManagerFactory emf = Persistence.createEntityManagerFactory("esicontrol");
 	        transaction.begin();
 
 	       
-	        em.merge(soldadoDispMedica);
+	        em.merge(soldadoInpSaude);
 
 	        transaction.commit();
 	    } catch (Exception e) {
@@ -39,9 +41,32 @@ EntityManagerFactory emf = Persistence.createEntityManagerFactory("esicontrol");
 	        
 	    }
 	}
-
 	
-	public void excluirSoldado(SoldadoDispMedica soldadoDispMedica) {
+	public List<SoldadoInpSaude> buscarPorNome(String nome) {
+        EntityManager em = emf.createEntityManager();
+
+        try {
+            // Consultar o banco de dados para buscar soldados pelo nome
+            TypedQuery<SoldadoInpSaude> query = em.createQuery("SELECT s FROM SoldadoInpSaude s WHERE s.nome LIKE :nome", SoldadoInpSaude.class);
+            query.setParameter("nome", "%" + nome + "%");
+            return query.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+	
+    public List<SoldadoInpSaude> buscarSoldados(){
+		EntityManager em = emf.createEntityManager();
+		List<SoldadoInpSaude> soldadosSaude = null;
+		try {
+			soldadosSaude = em.createQuery("FROM SoldadoInpSaude", SoldadoInpSaude.class).getResultList();
+		} finally {
+			em.close();
+		}
+		return soldadosSaude;
+	}
+	
+	public void excluirSoldado(SoldadoInpSaude soldadoInpSaude) {
 		EntityManager em = emf.createEntityManager();
 	    EntityTransaction transaction = null;
 	    try {
@@ -49,7 +74,7 @@ EntityManagerFactory emf = Persistence.createEntityManagerFactory("esicontrol");
 	        transaction.begin();
 
 	        
-	        Soldado soldadoToDelete = em.find(Soldado.class, soldadoDispMedica.getId());
+	        Soldado soldadoToDelete = em.find(Soldado.class, soldadoInpSaude.getId());
 	        if (soldadoToDelete != null) {
 	            em.remove(soldadoToDelete);
 	        }
@@ -62,31 +87,4 @@ EntityManagerFactory emf = Persistence.createEntityManagerFactory("esicontrol");
 	        e.printStackTrace();
 	    }
 	}
-	
-	public List<SoldadoDispMedica> buscarPorNome(String nome) {
-        EntityManager em = emf.createEntityManager();
-
-        try {
-            // Consultar o banco de dados para buscar soldados pelo nome
-            TypedQuery<SoldadoDispMedica> query = em.createQuery("SELECT s FROM SoldadoDispMedica s WHERE s.nome LIKE :nome", SoldadoDispMedica.class);
-            query.setParameter("nome", "%" + nome + "%");
-            return query.getResultList();
-        } finally {
-            em.close();
-        }
-    }
-
-	
-	public List<SoldadoDispMedica> buscarSoldados(){
-		EntityManager em = emf.createEntityManager();
-		List<SoldadoDispMedica> soldadosDispMedica = null;
-		try {
-			soldadosDispMedica = em.createQuery("FROM SoldadoDispMedica", SoldadoDispMedica.class).getResultList();
-		} finally {
-			em.close();
-		}
-		return soldadosDispMedica;
-	}
-	
-	
 }

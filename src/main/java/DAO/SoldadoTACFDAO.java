@@ -1,4 +1,4 @@
-package main.java.controller;
+package main.java.DAO;
 
 import java.util.List;
 
@@ -7,6 +7,9 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
+
+import main.java.model.Soldado;
+import main.java.model.SoldadoTACF;
 
 public class SoldadoTACFDAO {
 	EntityManagerFactory emf = Persistence.createEntityManagerFactory("esicontrol");
